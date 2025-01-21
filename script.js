@@ -88,22 +88,38 @@ document.addEventListener('DOMContentLoaded', () => {
     pumpStatusElement.classList.toggle('on', pumpStatus);
     pumpStatusElement.classList.toggle('off', !pumpStatus);
     durationElement.textContent = `${irrigationDuration} minutes`;
+
+    // Send pump control data back to ESP32
+    if (pumpStatus) {
+      fetch('http://[ESP32_IP_ADDRESS]/control', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          pumpStatus: pumpStatus,
+          duration: irrigationDuration
+        })
+      }).catch(error => console.error('Error:', error));
+    }
   }
 
-  // Simulate data updates (replace with actual ESP32 data)
-  function simulateDataUpdates() {
-    moistureData = {
-      depth1ft: Math.floor(Math.random() * 100),
-      depth2ft: Math.floor(Math.random() * 100),
-      depth3ft: Math.floor(Math.random() * 100)
-    };
-
-    updateMoistureBars();
-    calculateIrrigation();
+  // Fetch real data from ESP32
+  async function fetchMoistureData() {
+    try {
+      const response = await fetch('http://[ESP32_IP_ADDRESS]/moisture');
+      const data = await response.json();
+      moistureData = data;
+      updateMoistureBars();
+      calculateIrrigation();
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   }
 
   // Initial setup
   setGrowthStage(1);
-  setInterval(simulateDataUpdates, 5000);
-  simulateDataUpdates();
+  // Fetch data every 5 seconds
+  setInterval(fetchMoistureData, 5000);
+  fetchMoistureData();
 });
