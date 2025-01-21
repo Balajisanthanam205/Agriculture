@@ -1,85 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Agriculture Irrigation System</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://unpkg.com/lucide@latest"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Agriculture Monitoring</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="hero">
-    <div class="overlay">
-      <div class="container">
-        <h1 class="title">Agriculture Irrigation System</h1>
+    <div class="dashboard">
+        <header class="dashboard-header">
+            <div class="logo-section">
+                <h1>Smart Agriculture</h1>
+                <p>Real-time Monitoring System</p>
+            </div>
+            <div class="stage-selector">
+                <label for="growthStage">Growth Stage:</label>
+                <select id="growthStage">
+                    <option value="1">Month 1</option>
+                    <option value="2">Month 2</option>
+                    <option value="3">Month 3</option>
+                </select>
+            </div>
+        </header>
 
-        <!-- Growth Stage Selector -->
-        <div class="card">
-          <h2 class="section-title">
-            <i data-lucide="plant"></i> Growth Stage
-          </h2>
-          <div class="stage-buttons">
-            <button class="stage-btn active" data-stage="1">Month 1</button>
-            <button class="stage-btn" data-stage="2">Month 2</button>
-            <button class="stage-btn" data-stage="3">Month 3</button>
-          </div>
+        <div class="dashboard-grid">
+            <section class="sensor-section">
+                <h2>Soil Moisture Levels</h2>
+                <div class="sensors-container">
+                    <div class="sensor-card active" id="sensor1">
+                        <div class="sensor-header">
+                            <h3>1ft Depth</h3>
+                            <span class="sensor-badge">Primary</span>
+                        </div>
+                        <div class="sensor-body">
+                            <div class="moisture-gauge">
+                                <div class="gauge-fill"></div>
+                                <div class="gauge-center">
+                                    <span class="moisture-value">--</span>
+                                    <span class="moisture-unit">%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sensor-footer">
+                            <span class="status-dot"></span>
+                            <span class="status-text">Waiting for data...</span>
+                        </div>
+                    </div>
+
+                    <div class="sensor-card" id="sensor2">
+                        <div class="sensor-header">
+                            <h3>2ft Depth</h3>
+                            <span class="sensor-badge">Secondary</span>
+                        </div>
+                        <div class="sensor-body">
+                            <div class="moisture-gauge">
+                                <div class="gauge-fill"></div>
+                                <div class="gauge-center">
+                                    <span class="moisture-value">--</span>
+                                    <span class="moisture-unit">%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sensor-footer">
+                            <span class="status-dot"></span>
+                            <span class="status-text">Waiting for data...</span>
+                        </div>
+                    </div>
+
+                    <div class="sensor-card" id="sensor3">
+                        <div class="sensor-header">
+                            <h3>3ft Depth</h3>
+                            <span class="sensor-badge">Tertiary</span>
+                        </div>
+                        <div class="sensor-body">
+                            <div class="moisture-gauge">
+                                <div class="gauge-fill"></div>
+                                <div class="gauge-center">
+                                    <span class="moisture-value">--</span>
+                                    <span class="moisture-unit">%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sensor-footer">
+                            <span class="status-dot"></span>
+                            <span class="status-text">Waiting for data...</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="control-section">
+                <div class="irrigation-status">
+                    <h2>System Status</h2>
+                    <div class="status-card">
+                        <div class="status-icon"></div>
+                        <div class="status-details">
+                            <h3>Current Condition</h3>
+                            <p id="irrigationStatus">Initializing...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="irrigation-control">
+                    <h2>Irrigation Control</h2>
+                    <div class="control-card">
+                        <div class="pump-info">
+                            <h3>Recommended Duration</h3>
+                            <p id="pumpDuration">Calculating...</p>
+                        </div>
+                        <button id="startIrrigation" class="control-button" disabled>
+                            Start Irrigation
+                        </button>
+                    </div>
+                </div>
+            </section>
         </div>
 
-        <!-- Moisture Levels -->
-        <div class="moisture-grid">
-          <div class="card" data-depth="1">
-            <h3 class="sensor-title">
-              <i data-lucide="droplets"></i> 1ft Depth
-            </h3>
-            <div class="moisture-bar-container">
-              <div class="moisture-bar" style="width: 0%"></div>
+        <section class="activity-section">
+            <h2>System Activity</h2>
+            <div class="activity-container" id="activityLog">
+                <!-- Activity logs will be inserted here -->
             </div>
-            <div class="moisture-value">0% Moisture</div>
-          </div>
-
-          <div class="card opacity-50" data-depth="2">
-            <h3 class="sensor-title">
-              <i data-lucide="droplets"></i> 2ft Depth
-            </h3>
-            <div class="moisture-bar-container">
-              <div class="moisture-bar" style="width: 0%"></div>
-            </div>
-            <div class="moisture-value">0% Moisture</div>
-          </div>
-
-          <div class="card opacity-50" data-depth="3">
-            <h3 class="sensor-title">
-              <i data-lucide="droplets"></i> 3ft Depth
-            </h3>
-            <div class="moisture-bar-container">
-              <div class="moisture-bar" style="width: 0%"></div>
-            </div>
-            <div class="moisture-value">0% Moisture</div>
-          </div>
-        </div>
-
-        <!-- Irrigation Status -->
-        <div class="card">
-          <h2 class="section-title">
-            <i data-lucide="power"></i> Irrigation Status
-          </h2>
-          <div class="irrigation-grid">
-            <div>
-              <h3>Pump Status</h3>
-              <div class="pump-status off">OFF</div>
-            </div>
-            <div>
-              <h3>
-                <i data-lucide="timer"></i> Irrigation Duration
-              </h3>
-              <div class="duration">0 minutes</div>
-            </div>
-          </div>
-        </div>
-      </div>
+        </section>
     </div>
-  </div>
 
-  <script src="script.js"></script>
+    <!-- Irrigation Modal -->
+    <div id="irrigationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Irrigation Started</h2>
+                <div class="irrigation-animation"></div>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage"></p>
+                <div class="progress-bar">
+                    <div class="progress"></div>
+                </div>
+                <p class="time-remaining">Time Remaining: <span id="timeRemaining">--:--</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
