@@ -1,41 +1,109 @@
-const esp32IP = "http://192.168.225.16"; // ESP32 IP address
+document.addEventListener('DOMContentLoaded', () => {
+  // Initialize Lucide icons
+  lucide.createIcons();
 
-function fetchSensorData() {
-  fetch(`${esp32IP}/`)
-    .then(response => response.json())
-    .then(data => {
-      updateUI(data);
-    })
-    .catch(error => {
-      console.error("Error fetching data:", error);
-      document.getElementById("recommendation").textContent = "Error fetching data. Please check the ESP32 connection.";
+  // State
+  let growthStage = 1;
+  let moistureData = {
+    depth1ft: 0,
+    depth2ft: 0,
+    depth3ft: 0
+  };
+  let pumpStatus = false;
+  let irrigationDuration = 0;
+
+  // DOM Elements
+  const stageButtons = document.querySelectorAll('.stage-btn');
+  const moistureCards = document.querySelectorAll('.moisture-grid .card');
+  const pumpStatusElement = document.querySelector('.pump-status');
+  const durationElement = document.querySelector('.duration');
+
+  // Event Listeners
+  stageButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const stage = parseInt(button.dataset.stage);
+      setGrowthStage(stage);
     });
-}
+  });
 
-function updateUI(data) {
-  document.getElementById("moisture1").textContent = data.moisture1;
-  document.getElementById("moisture2").textContent = data.moisture2;
-  document.getElementById("moisture3").textContent = data.moisture3;
+  // Functions
+  function setGrowthStage(stage) {
+    growthStage = stage;
+    
+    // Update button states
+    stageButtons.forEach(btn => {
+      btn.classList.toggle('active', parseInt(btn.dataset.stage) === stage);
+    });
 
-  let avgMoisture = (data.moisture1 + data.moisture2 + data.moisture3) / 3;
-  let pumpDuration = 0;
+    // Update sensor card visibility
+    moistureCards.forEach((card, index) => {
+      card.classList.toggle('opacity-50', index + 1 > stage);
+    });
 
-  if (avgMoisture < 30) {
-    pumpDuration = 30; // 30 minutes
-  } else if (avgMoisture < 50) {
-    pumpDuration = 15; // 15 minutes
-  } else {
-    pumpDuration = 0; // No need to run the pump
+    // Recalculate irrigation
+    calculateIrrigation();
   }
 
-  document.getElementById("recommendation").textContent = 
-    pumpDuration > 0 
-    ? `Switch on the pump for ${pumpDuration} minutes.` 
-    : "No need to switch on the pump.";
-}
+  function updateMoistureBars() {
+    Object.entries(moistureData).forEach(([key, value], index) => {
+      const card = moistureCards[index];
+      const bar = card.querySelector('.moisture-bar');
+      const valueElement = card.querySelector('.moisture-value');
 
-// Fetch data every 5 seconds
-setInterval(fetchSensorData, 5000);
+      bar.style.width = `${value}%`;
+      bar.classList.toggle('low', value < 30);
+      valueElement.textContent = `${value}% Moisture`;
+    });
+  }
 
-// Initial fetch
-fetchSensorData();
+  function calculateIrrigation() {
+    let averageMoisture = 0;
+    let sensorCount = 0;
+
+    if (growthStage >= 1) {
+      averageMoisture += moistureData.depth1ft;
+      sensorCount++;
+    }
+    if (growthStage >= 2) {
+      averageMoisture += moistureData.depth2ft;
+      sensorCount++;
+    }
+    if (growthStage >= 3) {
+      averageMoisture += moistureData.depth3ft;
+      sensorCount++;
+    }
+
+    averageMoisture /= sensorCount || 1;
+
+    if (averageMoisture < 30) {
+      irrigationDuration = Math.round((30 - averageMoisture) * 2);
+      pumpStatus = true;
+    } else {
+      irrigationDuration = 0;
+      pumpStatus = false;
+    }
+
+    // Update UI
+    pumpStatusElement.textContent = pumpStatus ? 'ON' : 'OFF';
+    pumpStatusElement.classList.toggle('on', pumpStatus);
+    pumpStatusElement.classList.toggle('off', !pumpStatus);
+    durationElement.textContent = `${irrigationDuration} minutes`;
+  }
+
+  // Simulate data updates (replace with actual ESP32 data)
+  function simulateDataUpdates() {
+    moistureData = {
+      depth1ft: Math.floor(Math.random() * 100),
+      depth2ft: Math.floor(Math.random() * 100),
+      depth3ft: Math.floor(Math.random() * 100)
+    };
+
+    updateMoistureBars();
+    calculateIrrigation();
+  }
+
+  // Initial setup
+  setGrowthStage(1);
+  setInterval(simulateDataUpdates, 5000);
+  simulateDataUpdates();
+});

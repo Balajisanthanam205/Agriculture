@@ -3,31 +3,83 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <title>Soil Moisture Monitoring</title>
+  <title>Agriculture Irrigation System</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-  <div class="container">
-    <h1>Soil Moisture Monitoring</h1>
-    <div id="sensor-data">
-      <div>
-        <h2>Sensor at 1ft Depth</h2>
-        <p>Moisture: <span id="moisture1">--</span>%</p>
+  <div class="hero">
+    <div class="overlay">
+      <div class="container">
+        <h1 class="title">Agriculture Irrigation System</h1>
+
+        <!-- Growth Stage Selector -->
+        <div class="card">
+          <h2 class="section-title">
+            <i data-lucide="plant"></i> Growth Stage
+          </h2>
+          <div class="stage-buttons">
+            <button class="stage-btn active" data-stage="1">Month 1</button>
+            <button class="stage-btn" data-stage="2">Month 2</button>
+            <button class="stage-btn" data-stage="3">Month 3</button>
+          </div>
+        </div>
+
+        <!-- Moisture Levels -->
+        <div class="moisture-grid">
+          <div class="card" data-depth="1">
+            <h3 class="sensor-title">
+              <i data-lucide="droplets"></i> 1ft Depth
+            </h3>
+            <div class="moisture-bar-container">
+              <div class="moisture-bar" style="width: 0%"></div>
+            </div>
+            <div class="moisture-value">0% Moisture</div>
+          </div>
+
+          <div class="card opacity-50" data-depth="2">
+            <h3 class="sensor-title">
+              <i data-lucide="droplets"></i> 2ft Depth
+            </h3>
+            <div class="moisture-bar-container">
+              <div class="moisture-bar" style="width: 0%"></div>
+            </div>
+            <div class="moisture-value">0% Moisture</div>
+          </div>
+
+          <div class="card opacity-50" data-depth="3">
+            <h3 class="sensor-title">
+              <i data-lucide="droplets"></i> 3ft Depth
+            </h3>
+            <div class="moisture-bar-container">
+              <div class="moisture-bar" style="width: 0%"></div>
+            </div>
+            <div class="moisture-value">0% Moisture</div>
+          </div>
+        </div>
+
+        <!-- Irrigation Status -->
+        <div class="card">
+          <h2 class="section-title">
+            <i data-lucide="power"></i> Irrigation Status
+          </h2>
+          <div class="irrigation-grid">
+            <div>
+              <h3>Pump Status</h3>
+              <div class="pump-status off">OFF</div>
+            </div>
+            <div>
+              <h3>
+                <i data-lucide="timer"></i> Irrigation Duration
+              </h3>
+              <div class="duration">0 minutes</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div>
-        <h2>Sensor at 2ft Depth</h2>
-        <p>Moisture: <span id="moisture2">--</span>%</p>
-      </div>
-      <div>
-        <h2>Sensor at 3ft Depth</h2>
-        <p>Moisture: <span id="moisture3">--</span>%</p>
-      </div>
-    </div>
-    <div id="pump-duration">
-      <h2>Pump Recommendation</h2>
-      <p id="recommendation">Fetching data...</p>
     </div>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>
